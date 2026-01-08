@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="#03a9f4" opacity="0.1"/>
+  
+  <!-- Badge/Shield shape -->
+  <path d="M256 80L200 100L200 200C200 240 220 270 256 290C292 270 312 240 312 200L312 100Z" 
+        fill="#03a9f4" stroke="#03a9f4" stroke-width="8" stroke-linejoin="round"/>
+  
+  <!-- Eye icon (representing visibility/hiding) -->
+  <path d="M256 180C240 180 228 192 228 208C228 224 240 236 256 236C272 236 284 224 284 208C284 192 272 180 256 180Z" 
+        fill="#ffffff"/>
+  <path d="M256 160C290 160 318 188 318 222C318 256 290 284 256 284C222 284 194 256 194 222C194 188 222 160 256 160Z" 
+        fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+  
+  <!-- Slash line (hiding/crossing out) -->
+  <line x1="180" y1="140" x2="332" y2="260" 
+        stroke="#ff5722" stroke-width="20" stroke-linecap="round" opacity="0.9"/>
+</svg>
+

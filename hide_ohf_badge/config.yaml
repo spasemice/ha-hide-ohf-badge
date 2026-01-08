@@ -12,3 +12,4 @@ arch:
   - armv7
   - armhf
 image: ghcr.io/home-assistant/{arch}-base:latest
+icon: icon.svg
