@@ -1,0 +1,13 @@
+name: Hide OHF Badge
+slug: hide_ohf_badge
+version: "1.0.0"
+description: One-click add-on to remove Home Assistant Foundation splash badge.
+startup: once
+boot: false
+schema: {}
+options: {}
+arch:
+  - aarch64
+  - amd64
+  - armv7
+  - armhf
