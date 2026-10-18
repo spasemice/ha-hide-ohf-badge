@@ -2,12 +2,21 @@
 
 Keeps both Foundation login/splash SVG logos blank after Core updates.
 
+Version 1.2 also patches existing gzip/Brotli variants and removes the complete
+Foundation footer (including its attribution text) from the launch template.
+The main Home Assistant logo, loading messages, and scripts are preserved.
+
 ## Install or update
 
 1. Open **Settings → Apps → Install app → Local apps → Hide OHF Badge**.
 2. Select **Install**, or **Update** for an existing installation.
 3. Set **Protection mode OFF**, **Start on boot ON**, and **Watchdog ON** in Info.
 4. Select **Start**, then **Open Web UI** for the verified result and last check time.
+
+If the status says **Restart Core to finish**, Core has already cached the old
+launch HTML in memory. Restart Home Assistant Core once and hard-refresh the
+browser. This app does not restart Core. It makes one HTTP probe during the
+startup check to detect this situation; there is no periodic HTTP polling.
 
 Start on boot defaults to ON. On the first start of version 1.1 or later, the app also enables
 Watchdog once using its own Supervisor self endpoint. Later changes to these
@@ -40,7 +49,7 @@ The native Configuration tab has no options because there is no interval to
 configure. Home Assistant does not support a live read-only result field in its
 options form; status and settings feedback is in **Open Web UI** instead.
 
-Originals are saved under the Home Assistant configuration folder:
+Original SVGs, compressed variants, and the launch template are saved under the Home Assistant configuration folder:
 branding-backups/automatic/<content-hash>/<original-filename>.
 Already-blank files are not rewritten. Missing or unexpected SVGs cause an
 error rather than a change to unrelated files. A cached logo may require a

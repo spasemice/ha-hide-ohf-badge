@@ -4,6 +4,11 @@ Checks and blanks both Foundation login/splash logos when Home Assistant Core
 starts, then sleeps waiting for the next Core start event. No periodic SVG
 checks, no 300-second timer, and no automatic Home Assistant restart.
 
+Plain SVG files, gzip/Brotli variants, and the initial launch footer are covered.
+If Core already cached its launch HTML, Open Web UI shows **Restart Core to
+finish**. Restart Home Assistant Core once, then hard-refresh your browser.
+The app never restarts Core automatically.
+
 This app provides an optional visual customization for users who prefer a
 simpler login and loading screen. We fully support Home Assistant and the
 Open Home Foundation, and appreciate their work and the open-source community

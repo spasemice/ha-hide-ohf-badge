@@ -23,6 +23,19 @@ Validation: unit tests, actual aarch64 build/update on the Raspberry Pi,
 verified Core SVG results, HTTP health, and authenticated ingress UI.
 No Core upgrade/restart was performed as part of validation.
 
+## Follow-up: browser preloader
+
+The first implementation replaced only the uncompressed SVG files. Live HTTP
+requests with Accept-Encoding gzip or br still returned the original logo from
+the precompressed siblings. Version 1.2 replaces those compressed variants too,
+and removes the Foundation attribution block from index.html. Home Assistant
+caches its Jinja template in the running process, so an existing session may
+need one Core restart. This is reported in the status page; never automated.
+
+Validation: 17 tests passed, including real Brotli and gzip round trips, and a
+dry run on a temporary copy of the exact installed frontend patched eight files
+without changing the live frontend.
+
 Official references:
 
 - https://contributors.home-assistant.io/apps/reference/configuration/
