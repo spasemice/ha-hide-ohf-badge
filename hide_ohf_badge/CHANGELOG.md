@@ -1,0 +1,19 @@
+# 1.1.1
+
+- Add Back to app navigation from the status page to the app's Info tab.
+- Use English throughout the status screen for international users.
+- Explain automatic restoration after the next Core update when the app is disabled or uninstalled.
+- Include app store icon and logo artwork.
+
+# 1.1.0
+
+- Remove the 300-second fallback timer. Check at app/Core startup or event-stream recovery only.
+- Sleep on the Docker event stream between starts; no SVG polling.
+- Add an authenticated, read-only status page with last result/time and Info settings.
+- Enable Start on boot and Watchdog once on first 1.1.0 start, then respect user changes.
+- Document Protection mode OFF in Info; no automatic security setting changes.
+- Watchdog checks app responsiveness only, never SVG files.
+
+# 1.0.0
+
+- Initial release: blank both Foundation SVG logos, preserving originals.
