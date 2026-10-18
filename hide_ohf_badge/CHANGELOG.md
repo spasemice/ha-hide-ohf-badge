@@ -1,3 +1,10 @@
+# 1.1.2
+
+- Show a reference screenshot identifying the bottom Foundation badge in Info and the repository README.
+- Explain that this is a personal appearance preference, with full support for Home Assistant and the Open Home Foundation.
+- Correct the official Add repository badge and installer URL; include a plain text link.
+- Refresh the installed app description with the updated wording.
+
 # 1.1.1
 
 - Add Back to app navigation from the status page to the app's Info tab.
