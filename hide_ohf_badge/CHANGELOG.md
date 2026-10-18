@@ -17,3 +17,10 @@
 # 1.0.0
 
 - Initial release: blank both Foundation SVG logos, preserving originals.
+# 1.1.2
+
+- Show a reference screenshot identifying the bottom Foundation badge in Info and the repository README.
+- Explain that this is a personal appearance preference, with full support for Home Assistant and the Open Home Foundation.
+- Correct the official Add repository badge and installer URL; include a plain text link.
+- Refresh the installed app description with the updated wording.
+

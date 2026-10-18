@@ -47,7 +47,7 @@ dl{display:grid;grid-template-columns:minmax(160px,1fr) 2fr;gap:0;margin:0}dt,dd
 .note{color:var(--muted);font-size:14px;margin:24px 0 0}details{margin-top:22px}summary{cursor:pointer;color:var(--accent)}code{font-size:13px;overflow-wrap:anywhere}
 @media(prefers-color-scheme:dark){:root{--paper:#111f29;--surface:#1c2c37;--ink:#e1edf3;--muted:#b3c5d0;--line:#354956;--accent:#79d4e4;--good:#8ad7af;--bad:#ffb199}}
 @media(max-width:520px){main{padding:24px 16px}header{align-items:flex-start;gap:10px}h1{font-size:18px}h2{font-size:25px}.result{padding:18px}dl{grid-template-columns:1fr}dt{border-bottom:0;padding-bottom:0}dd{padding-top:3px}}
-</style><main><a class="back" href="{{back_href}}" target="_top">← Back to app</a><header><div><h1>Hide OHF Badge</h1><p>Status and settings · 1.1.1</p></div><a class="refresh" href="./">Refresh status</a></header>
+</style><main><a class="back" href="{{back_href}}" target="_top">← Back to app</a><header><div><h1>Hide OHF Badge</h1><p>Status and settings · 1.1.2</p></div><a class="refresh" href="./">Refresh status</a></header>
 <section class="result" style="--result:var(--{{color}})"><span class="check" aria-hidden="true">{{symbol}}</span><h2>{{title}}</h2><p>{{message}}</p><span class="mode">{{mode}}</span></section>
 <h3>Last check</h3><dl><dt>Time</dt><dd><time datetime="{{checked}}">{{checked}}</time></dd>
 <dt>Trigger</dt><dd>{{trigger}}</dd><dt>Checks since app start</dt><dd>{{count}}</dd><dt>Periodic SVG checks</dt><dd>Disabled · no timer</dd></dl>
