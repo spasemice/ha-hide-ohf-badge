@@ -2,7 +2,7 @@ name: Hide OHF Badge
 version: "1.1.1"
 slug: hide_ohf_badge
 url: https://github.com/spasemice/ha-hide-ohf-badge
-description: Blank login logos at Core startup, then sleep. Start on boot ON; Watchdog ON; Protection mode OFF.
+description: Hide the login/splash badge for personal visual preferences, with full support for Home Assistant and the Open Home Foundation. Start on boot ON; Watchdog ON; Protection mode OFF.
 arch:
   - aarch64
   - amd64

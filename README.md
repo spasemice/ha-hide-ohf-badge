@@ -3,6 +3,12 @@
 A Home Assistant app that replaces the Foundation logo on the login and splash
 screens with a transparent SVG. Covers light and dark variants.
 
+This app provides an optional visual customization for users who prefer a
+simpler login and loading screen. We fully support Home Assistant and the
+Open Home Foundation, and appreciate their work and the open-source community
+behind them. Hiding the badge is solely a personal appearance preference and
+does not imply criticism or a lack of support.
+
 [![Add app repository to Home Assistant](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fspasemice%2Fha-hide-ohf-badge)
 
 [Open the Home Assistant repository installer](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fspasemice%2Fha-hide-ohf-badge)

@@ -4,6 +4,12 @@ Checks and blanks both Foundation login/splash logos when Home Assistant Core
 starts, then sleeps waiting for the next Core start event. No periodic SVG
 checks, no 300-second timer, and no automatic Home Assistant restart.
 
+This app provides an optional visual customization for users who prefer a
+simpler login and loading screen. We fully support Home Assistant and the
+Open Home Foundation, and appreciate their work and the open-source community
+behind them. Hiding the badge is solely a personal appearance preference and
+does not imply criticism or a lack of support.
+
 ## Which logo does it hide?
 
 The app hides the **Open Home Foundation badge at the bottom** of the splash
