@@ -1,15 +1,28 @@
 # Hide OHF Badge
 
-Home Assistant add-on that removes the Home Assistant Foundation splash badge.
+Checks and blanks both Foundation login/splash logos when Home Assistant Core
+starts, then sleeps waiting for the next Core start event. No periodic SVG
+checks, no 300-second timer, and no automatic Home Assistant restart.
 
-## Usage
-1. Install add-on
-2. Click **Start**
-3. Refresh Home Assistant (Ctrl+Shift+R)
+**Required Info settings:**
 
-After every Home Assistant update, just click **Start** again.
+| Setting | Value |
+| --- | --- |
+| Start on boot | **ON** (default) |
+| Watchdog | **ON** (enabled once on the first start of version 1.1 or later) |
+| Protection mode | **OFF** (set manually before Start) |
 
-## Notes
-- No SSH required
-- No configuration needed
-- Works on Home Assistant OS / Supervised
+Select **Open Web UI** for the last verified result, check time, sleeping state,
+and current Info settings. The standard Configuration tab has no options.
+Watchdog checks only that this app is responsive; it never checks the SVG files.
+
+Protection mode is a Supervisor security setting and cannot be disabled by the
+app manifest. This app does not grant itself an admin role or turn off protection.
+Docker access is needed to replace the two files inside Core.
+
+## Restore default logos
+
+To restore the default Home Assistant logos, stop this app and disable
+**Start on boot**, or uninstall the app. The next **Home Assistant Core update**
+will automatically restore the original logos. Stopping or uninstalling the app
+does not restore the logos immediately.
