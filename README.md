@@ -3,6 +3,10 @@
 A Home Assistant app that replaces the Foundation logo on the login and splash
 screens with a transparent SVG. Covers light and dark variants.
 
+The app patches plain SVGs and their gzip/Brotli variants, and removes the
+Foundation footer from the initial launch HTML. This covers the preloader on
+browser refresh as well as the login screen.
+
 This app provides an optional visual customization for users who prefer a
 simpler login and loading screen. We fully support Home Assistant and the
 Open Home Foundation, and appreciate their work and the open-source community
@@ -39,6 +43,11 @@ Home Assistant Container without Supervisor cannot install apps.
 The app listens for Home Assistant Core container start events. It subscribes,
 checks once, replaces the two SVG files if needed, then sleeps until Core starts
 again. There is no 300-second timer and no periodic SVG polling.
+
+If you install or update the app while Core is already running, Core may have
+cached the old launch HTML. Open Web UI reports **Restart Core to finish** when
+this is detected. Restart Home Assistant Core once and hard-refresh the browser.
+The app never restarts Core itself. Future Core starts apply the patch again.
 
 The process remains in memory to receive the next event. If Docker disconnects,
 it reconnects with a backoff and checks once to cover a missed start event.

@@ -1,4 +1,5 @@
 import importlib.util
+import gzip
 import http.client
 import json
 from pathlib import Path
@@ -24,6 +25,12 @@ patcher = module("logo_patcher", "patcher.py")
 app = module("logo_app", "app.py")
 status_page = module("logo_status_page", "status.py")
 ORIGINAL = b'<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0"/></svg>'
+TEMPLATE = (b'<!doctype html><html><head><style>.ohf-logo{display:flex}</style></head><body>'
+            b'<div id="ha-launch-screen"><img class="ha-logo" src="/home-assistant.svg">'
+            b'<div class="ohf-logo"><span>A project from the</span><picture>'
+            b'<source srcset="/static/images/open-home-foundation-on-dark.svg">'
+            b'<img src="/static/images/open-home-foundation-on-light.svg"></picture></div></div>'
+            b'<home-assistant></home-assistant><script>window.example="keep me";</script></body></html>')
 
 
 class PatcherTests(unittest.TestCase):
@@ -33,6 +40,7 @@ class PatcherTests(unittest.TestCase):
         self.frontend = self.root / "frontend"
         self.images = self.frontend / "static" / "images"
         self.images.mkdir(parents=True)
+        (self.frontend / "index.html").write_bytes(TEMPLATE)
         for name in patcher.NAMES:
             (self.images / name).write_bytes(ORIGINAL)
         self.owner = mock.patch.object(patcher.os, "chown", create=True)
@@ -47,14 +55,65 @@ class PatcherTests(unittest.TestCase):
 
     def test_update_patch_preserves_originals_and_second_run_is_noop(self):
         first = self.patch()
-        self.assertEqual(first["changed"], 2)
+        self.assertEqual(first["changed"], 3)
         for backup in first["backups"]:
-            self.assertEqual(Path(backup).read_bytes(), ORIGINAL)
-        modified = {p.name: p.stat().st_mtime_ns for p in self.images.iterdir()}
+            self.assertEqual(Path(backup).read_bytes(), TEMPLATE if Path(backup).name == "index.html" else ORIGINAL)
+        modified = {str(p): p.stat().st_mtime_ns for p in self.frontend.rglob("*") if p.is_file()}
         self.assertEqual(self.patch()["changed"], 0)
-        self.assertEqual(modified, {p.name: p.stat().st_mtime_ns for p in self.images.iterdir()})
+        self.assertEqual(modified, {str(p): p.stat().st_mtime_ns for p in self.frontend.rglob("*") if p.is_file()})
         for name in patcher.NAMES:
             self.assertEqual((self.images / name).read_bytes(), patcher.BLANK)
+        html = (self.frontend / "index.html").read_text()
+        self.assertIn(patcher.MARKER, html)
+        self.assertIn('class="ha-logo"', html)
+        self.assertIn('window.example="keep me"', html)
+        self.assertNotIn("A project from the", html)
+
+    def test_gzip_variants_cannot_serve_the_original_logo(self):
+        for name in patcher.NAMES:
+            (self.images / (name + ".gz")).write_bytes(gzip.compress(ORIGINAL))
+        self.assertEqual(self.patch()["changed"], 5)
+        for name in patcher.NAMES:
+            self.assertEqual(gzip.decompress((self.images / (name + ".gz")).read_bytes()), patcher.BLANK)
+        self.assertEqual(self.patch()["changed"], 0)
+
+    @unittest.skipUnless(importlib.util.find_spec("brotli") or importlib.util.find_spec("brotlicffi"), "Brotli is provided by Home Assistant Core")
+    def test_brotli_variants_cannot_serve_the_original_logo(self):
+        codec = patcher.brotli_codec()
+        for name in patcher.NAMES:
+            (self.images / (name + ".br")).write_bytes(codec.compress(ORIGINAL))
+        self.assertEqual(self.patch()["changed"], 5)
+        for name in patcher.NAMES:
+            self.assertEqual(codec.decompress((self.images / (name + ".br")).read_bytes()), patcher.BLANK)
+        self.assertEqual(self.patch()["changed"], 0)
+
+    def test_bad_compressed_asset_prevents_all_changes(self):
+        (self.images / (patcher.NAMES[0] + ".gz")).write_bytes(b"invalid gzip")
+        with self.assertRaises(Exception):
+            self.patch()
+        self.assertEqual((self.frontend / "index.html").read_bytes(), TEMPLATE)
+        self.assertEqual((self.images / patcher.NAMES[0]).read_bytes(), ORIGINAL)
+        self.assertFalse((self.root / "backups").exists())
+
+    def test_legacy_badge_is_patched_when_present(self):
+        (self.images / patcher.LEGACY_NAME).write_bytes(ORIGINAL)
+        self.patch()
+        self.assertEqual((self.images / patcher.LEGACY_NAME).read_bytes(), patcher.BLANK)
+
+    def test_unknown_footer_prevents_all_changes(self):
+        path = self.frontend / "index.html"
+        path.write_bytes(TEMPLATE.replace(b' class="ohf-logo"', b' class="different-logo"'))
+        with self.assertRaises(RuntimeError):
+            self.patch()
+        self.assertEqual((self.images / patcher.NAMES[0]).read_bytes(), ORIGINAL)
+        self.assertFalse((self.root / "backups").exists())
+
+    def test_two_footer_blocks_are_rejected(self):
+        path = self.frontend / "index.html"
+        path.write_bytes(TEMPLATE.replace(b'<div class="ohf-logo">', b'<div class="ohf-logo"><div class="ohf-logo">').replace(b'</picture></div>', b'</picture></div></div>'))
+        with self.assertRaises(RuntimeError):
+            self.patch()
+        self.assertEqual((self.images / patcher.NAMES[0]).read_bytes(), ORIGINAL)
 
     def test_missing_new_frontend_asset_does_not_partially_patch(self):
         (self.images / patcher.NAMES[1]).unlink()
@@ -156,6 +215,9 @@ class DockerTests(unittest.TestCase):
         html = status_page.render({"state": "ok", "listener": "connected", "check_count": 1}, {})
         self.assertIn("Logos removed", html)
         self.assertIn("Sleeping", html)
+        html = status_page.render({"state": "ok", "core_restart_required": True}, {})
+        self.assertIn("Restart Core to finish", html)
+        self.assertNotIn("Logos removed", html)
 
     def test_multiplexed_stderr_and_stdout_are_separate(self):
         def frame(stream, value):

@@ -9,10 +9,14 @@ TRUSTED_HOSTS = frozenset({"172.30.32.2", "127.0.0.1", "::1"})
 
 def render(report, settings):
     success = report["state"] == "ok"
-    title = "Logos removed" if success else (
+    restart_needed = success and bool(report.get("core_restart_required"))
+    title = "Restart Core to finish" if restart_needed else "Logos removed" if success else (
         "Attention needed" if report["state"] == "error" else "Waiting for Home Assistant")
     message = ("Completed successfully. Both SVG images are verified blank." if success else
                report.get("error", report.get("reason", "The startup check is in progress.")))
+    if restart_needed:
+        message = ("Logo files and the launch template are updated. Core has cached the previous launch screen. "
+                   "Restart Home Assistant Core once, then hard-refresh your browser. This app will not restart Core automatically.")
     mode = ("Sleeping · waiting for the next Core start" if report.get("listener") == "connected"
             else "Reconnecting to start notifications")
     if report.get("listener_error"):
@@ -25,7 +29,7 @@ def render(report, settings):
             return "Unknown · check the Info tab"
         current = "On" if value in (True, "auto") else "Off"
         return current + (" ✓" if value == expected else " · change in Info")
-    values = {"color": "good" if success else "bad", "symbol": "✓" if success else "!",
+    values = {"color": "good" if success and not restart_needed else "bad", "symbol": "✓" if success and not restart_needed else "!",
               "title": title, "message": message, "mode": mode, "trigger": trigger,
               "checked": report.get("checked_at", "Not checked yet"),
               "count": str(report.get("check_count", 0)), "boot": setting("boot", "auto"),
@@ -47,7 +51,7 @@ dl{display:grid;grid-template-columns:minmax(160px,1fr) 2fr;gap:0;margin:0}dt,dd
 .note{color:var(--muted);font-size:14px;margin:24px 0 0}details{margin-top:22px}summary{cursor:pointer;color:var(--accent)}code{font-size:13px;overflow-wrap:anywhere}
 @media(prefers-color-scheme:dark){:root{--paper:#111f29;--surface:#1c2c37;--ink:#e1edf3;--muted:#b3c5d0;--line:#354956;--accent:#79d4e4;--good:#8ad7af;--bad:#ffb199}}
 @media(max-width:520px){main{padding:24px 16px}header{align-items:flex-start;gap:10px}h1{font-size:18px}h2{font-size:25px}.result{padding:18px}dl{grid-template-columns:1fr}dt{border-bottom:0;padding-bottom:0}dd{padding-top:3px}}
-</style><main><a class="back" href="{{back_href}}" target="_top">← Back to app</a><header><div><h1>Hide OHF Badge</h1><p>Status and settings · 1.1.2</p></div><a class="refresh" href="./">Refresh status</a></header>
+</style><main><a class="back" href="{{back_href}}" target="_top">← Back to app</a><header><div><h1>Hide OHF Badge</h1><p>Status and settings · 1.2.0</p></div><a class="refresh" href="./">Refresh status</a></header>
 <section class="result" style="--result:var(--{{color}})"><span class="check" aria-hidden="true">{{symbol}}</span><h2>{{title}}</h2><p>{{message}}</p><span class="mode">{{mode}}</span></section>
 <h3>Last check</h3><dl><dt>Time</dt><dd><time datetime="{{checked}}">{{checked}}</time></dd>
 <dt>Trigger</dt><dd>{{trigger}}</dd><dt>Checks since app start</dt><dd>{{count}}</dd><dt>Periodic SVG checks</dt><dd>Disabled · no timer</dd></dl>

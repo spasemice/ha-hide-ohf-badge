@@ -1,3 +1,11 @@
+# 1.2.0
+
+- Fix the browser preloader: patch gzip and Brotli copies that could still serve the original SVGs.
+- Remove the complete Foundation footer from index.html while preserving the main logo and boot scripts.
+- Patch the legacy badge when present, and back up all original files before writing.
+- Detect cached Core launch HTML and report when a one-time Core restart is needed. Never restart Core automatically.
+- Validate the fix with compressed-asset and launch-template tests and a copy of the actual installed frontend.
+
 # 1.1.2
 
 - Show a reference screenshot identifying the bottom Foundation badge in Info and the repository README.

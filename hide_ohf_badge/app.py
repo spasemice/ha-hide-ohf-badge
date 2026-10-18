@@ -182,12 +182,14 @@ class App:
                 report = self.docker.patch()
                 signature = (report["state"], report.get("image"))
                 if report.get("changed"):
-                    LOG.info("Replaced %s logos; original backups: %s", report["changed"],
+                    LOG.info("Updated %s frontend files; original backups: %s", report["changed"],
                              ", ".join(report["backups"]))
                 elif signature != self.previous:
                     LOG.info("%s", "Both logos are already blank: " + report.get("image", "")
                              if report["state"] == "ok" else report["reason"])
                 self.previous = signature
+                if report.get("core_restart_required") and report.get("changed"):
+                    LOG.warning("Core has cached the launch screen. Restart Core once to apply the footer change; this app will not restart Core.")
                 return self.record(report, reason)
             except Exception as error:
                 signature = ("error", str(error))
